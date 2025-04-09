@@ -8,7 +8,7 @@ import subprocess
 from filelock import FileLock
 from typing import Any
 from datasets import load_from_disk, load_dataset
-from pyserini.search.lucene import LuceneSearcher
+# from pyserini.search.lucene import LuceneSearcher
 from git import Repo
 from pathlib import Path
 from tqdm.auto import tqdm

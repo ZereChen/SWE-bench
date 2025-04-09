@@ -288,7 +288,7 @@ def run_instances(
         run_id (str): Run ID
         timeout (int): Timeout for running tests
     """
-    client = docker.from_env()
+    # client = docker.from_env()
     test_specs = list(
         map(
             lambda instance: make_test_spec(
@@ -297,7 +297,7 @@ def run_instances(
             instances,
         )
     )
-
+    client = docker.from_env()
     # print number of existing instance images
     instance_image_ids = {x.instance_image_key for x in test_specs}
     existing_images = {
@@ -500,15 +500,16 @@ def main(
     # run instances locally
     if platform.system() == "Linux":
         resource.setrlimit(resource.RLIMIT_NOFILE, (open_file_limit, open_file_limit))
-    client = docker.from_env()
-
-    existing_images = list_images(client)
+    # client = docker.from_env()
+    #
+    # existing_images = list_images(client)
     if not dataset:
         print("No instances to run.")
     else:
         # build environment images + run instances
         if namespace is None and not rewrite_reports:
-            build_env_images(client, dataset, force_rebuild, max_workers)
+            pass
+            # build_env_images(client, dataset, force_rebuild, max_workers)
         run_instances(
             predictions,
             dataset,
@@ -522,7 +523,9 @@ def main(
             instance_image_tag=instance_image_tag,
             rewrite_reports=rewrite_reports,
         )
+    client = docker.from_env()
 
+    existing_images = list_images(client)
     # clean images + make final report
     clean_images(client, existing_images, cache_level, clean)
     return make_run_report(predictions, full_dataset, run_id, client)

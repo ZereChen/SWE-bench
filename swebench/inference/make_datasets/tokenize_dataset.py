@@ -9,6 +9,7 @@ from pathlib import Path
 
 import tiktoken
 from datasets import disable_caching, load_from_disk, load_dataset
+from pyarrow import nulls
 from tqdm.auto import tqdm
 from transformers import LlamaTokenizer
 
@@ -29,8 +30,10 @@ def llama(text, tokenizer):
 
 
 TOKENIZER_FUNCS = {
-    "cl100k": (tiktoken.get_encoding("cl100k_base"), cl100k),
-    "llama": (LlamaTokenizer.from_pretrained("togethercomputer/LLaMA-2-7B-32K"), llama),
+    # "cl100k": (tiktoken.get_encoding("cl100k_base"), cl100k),
+    # "llama": (LlamaTokenizer.from_pretrained("togethercomputer/LLaMA-2-7B-32K"), llama),
+    "cl100k": (None, None),
+    "llama": (None, None),
 }
 
 

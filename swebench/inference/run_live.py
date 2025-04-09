@@ -125,6 +125,7 @@ def make_instance(
         instance_id=instance_id,
     )
     results = search(instance, index_dir)
+    results = {"instance_id": instance_id, "hits": [{"docid": 1, "score": 99}]}
     hits = results["hits"]
     logger.info(f"Retrieved {len(hits)} documents")
     with ContextManager(repo_dir, commit) as cm:
@@ -134,23 +135,24 @@ def make_instance(
             readmes = list()
         instance["readmes"] = ingest_files(readmes)
         for hit in hits:
-            hit["file_contents"] = open(hit["docid"]).read()
+            # hit["file_contents"] = open(hit["docid"]).read()
+            hit["file_contents"] = query
         instance["file_contents"] = dict()
         base_text_inputs = PROMPT_FUNCTIONS[prompt_style](instance)
-        base_text_input_length = len(tokenizer_func(base_text_inputs, tokenizer))
+        # base_text_input_length = len(tokenizer_func(base_text_inputs, tokenizer))
         instance["file_contents"] = {x["docid"]: x["file_contents"] for x in hits}
-        cur_input_len = base_text_input_length
+        # cur_input_len = base_text_input_length
         include_files = list()
         for filename in [x["docid"] for x in hits]:
             content = make_code_text({filename: instance["file_contents"][filename]})
-            tokens = tokenizer_func(content, tokenizer)
-            if cur_input_len + len(tokens) < max_context_len:
-                include_files.append(filename)
-                cur_input_len += len(tokens)
-        logger.info(
-            f"Including {len(include_files)} files in context with {cur_input_len} tokens:\n"
-            + "\n\t".join(sorted(include_files))
-        )
+            # tokens = tokenizer_func(content, tokenizer)
+            # if cur_input_len + len(tokens) < max_context_len:
+            #     include_files.append(filename)
+            #     cur_input_len += len(tokens)
+        # logger.info(
+        #     f"Including {len(include_files)} files in context with {cur_input_len} tokens:\n"
+        #     + "\n\t".join(sorted(include_files))
+        # )
         instance["file_contents"] = {
             filename: instance["file_contents"][filename] for filename in include_files
         }

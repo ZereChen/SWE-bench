@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/run_live_data/repo__huggingface__transformers" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/run_live_data/repo__huggingface__transformers" vcs="Git" />
+  </component>
+</project>

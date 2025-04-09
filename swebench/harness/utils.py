@@ -1,22 +1,24 @@
 import json
+import os
 import re
-import requests
 import traceback
-
 from argparse import ArgumentTypeError
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
+from typing import cast
+
+import requests
 from datasets import Dataset, load_dataset, load_from_disk
 from dotenv import load_dotenv
-from pathlib import Path
 from tqdm import tqdm
-from typing import cast
+from unidiff import PatchSet
+
 from swebench.harness.constants import (
     SWEbenchInstance,
     KEY_INSTANCE_ID,
     KEY_MODEL,
     KEY_PREDICTION,
 )
-from unidiff import PatchSet
 
 load_dotenv()
 
@@ -149,7 +151,10 @@ def load_swebench_dataset(
         if (Path(name) / split / "dataset_info.json").exists():
             dataset = cast(Dataset, load_from_disk(Path(name) / split))
         else:
-            dataset = cast(Dataset, load_dataset(name, split=split))
+            # dataset = cast(Dataset, load_dataset(name, split=split))
+            load_dataset_1 = load_dataset(name, split=split)
+            dataset = cast(Dataset, load_dataset_1)
+            load_dataset_1.save_to_disk(Path(name) / split)
         dataset_ids = {instance[KEY_INSTANCE_ID] for instance in dataset}
     if instance_ids:
         if instance_ids - dataset_ids:
